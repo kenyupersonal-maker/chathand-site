@@ -10261,6 +10261,7 @@ var EN_ = (function () {
     .ph-policy-body{min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:22px 26px 28px;color:#3e4945}
     .ph-policy-body h3{margin:23px 0 8px;color:#161b19;font-size:16px;line-height:1.4;font-weight:600}
     .ph-policy-body p{margin:0 0 12px}.ph-policy-body ul{margin:0 0 12px;padding-left:1.3em}.ph-policy-body li+li{margin-top:5px}
+    .ph-policy-body .ph-policy-date{color:#68756f;font-size:13px}
     .ph-policy-body a{color:#087c64;text-decoration:underline;text-underline-offset:2px}
     html.ph-policy-visible{overflow:hidden}
     @media(max-width:700px){.ph-consent{bottom:16px;width:calc(100% - 32px);padding:16px;gap:12px;align-items:stretch;flex-direction:column}.ph-consent-actions{width:100%}.ph-consent button{flex:1;min-width:0}}
@@ -10275,8 +10276,8 @@ var EN_ = (function () {
   policy.setAttribute('aria-labelledby', 'ph-policy-title');
   document.body.append(policy);
   const policyZH = `
-    <p>生效日期：2026 年 10 月 31 日<br>最近更新：2026 年 10 月 31 日</p>
-    <p>欢迎访问由 Ken Yu 维护的 ChatHand 官网。本政策说明我们如何处理您访问本网站时产生的信息，以及您可以如何管理自己的选择。本政策适用于本网站；ChatHand App 与其他服务的数据处理请参阅相应服务的说明。</p>
+    <p>本政策说明由 Ken Yu 维护的 ChatHand 官网如何处理访问数据，以及您可以如何管理自己的选择。ChatHand App 与其他服务的数据处理请参阅相应说明。</p>
+    <p class="ph-policy-date">生效及更新日期：2026 年 10 月 31 日</p>
     <h3>一、我们收集哪些信息</h3>
     <p><strong>无 Cookie 访问统计。</strong>您尚未选择或选择“仅必要项”时，网站仍会通过 PostHog 收集不写入统计 Cookie 的访问信息，包括页面浏览、访问时间、滚动深度、版块到达情况，以及下载入口、语言切换、轮播、常见问题和打赏方式等交互。我们还可能收集访问来源、UTM 活动标识、浏览器、设备类型、操作系统和错误类别。此模式不提供国家或地区信息，也无法可靠识别跨天回访。</p>
     <p><strong>允许 Cookie 后。</strong>PostHog 可以使用 Cookie 识别回访，统计信息可能包含大致国家或地区。我们还会启用页面交互回放，用来了解访客在官网内如何滚动、点击和浏览。</p>
@@ -10296,14 +10297,14 @@ var EN_ = (function () {
     <p>如对本政策或您的信息有疑问，请通过 <a href="https://github.com/kenyupersonal-maker/chathand/issues/new/choose" target="_blank" rel="noopener noreferrer">GitHub 反馈入口</a>联系我们。该入口公开，请勿在公开问题中填写敏感或个人信息。</p>
   `;
   const policyEN = `
-    <p>Effective: October 31, 2026<br>Last updated: October 31, 2026</p>
-    <p>Welcome to the ChatHand website maintained by Ken Yu. This policy explains how we handle information generated when you visit this site and how you can manage your choices. It applies to this website; please consult the relevant notices for the ChatHand app and other services.</p>
+    <p>This policy explains how the ChatHand website, maintained by Ken Yu, handles visit data and how you can manage your choices. For the ChatHand app and other services, please refer to their respective notices.</p>
+    <p class="ph-policy-date">Effective and last updated: October 31, 2026</p>
     <h3>1. Information we collect</h3>
-    <p><strong>Cookieless usage statistics.</strong>Before you choose, or if you select “Essential only”, we still use PostHog for usage statistics without setting analytics cookies. These include page views, visit duration, scrolling, sections viewed and interactions with download links, language controls, the carousel, FAQs and support options. We may also collect referring sources, UTM campaign labels, browser, device type, operating system and error categories. This mode does not provide country or region and cannot reliably identify return visits across days.</p>
+    <p><strong>Cookieless usage statistics.</strong>Before you choose, or if you select “Decline”, we still use PostHog for usage statistics without setting analytics cookies. These include page views, visit duration, scrolling, sections viewed and interactions with download links, language controls, the carousel, FAQs and support options. We may also collect referring sources, UTM campaign labels, browser, device type, operating system and error categories. This mode does not provide country or region and cannot reliably identify return visits across days.</p>
     <p><strong>When cookies are allowed.</strong>PostHog can use cookies to recognize return visits, and analytics may include an approximate country or region. We also enable session replay to understand scrolling, clicks and browsing on this website.</p>
     <p><strong>Replay masking.</strong>Inputs, editable areas, and payment cards containing addresses and QR codes are blocked or masked. Replay is limited to this website. Console logs, network request bodies and Canvas recording are disabled.</p>
     <h3>2. Cookies and third-party analytics</h3>
-    <p>PostHog provides analytics and replay for this site. In the notice, you can choose “Accept” or “Essential only”. Accepting allows PostHog cookies and replay. Before you choose or if you select “Essential only”, cookieless analytics still runs and replay stays off. The site may also save language and demo display preferences locally in your browser.</p>
+    <p>PostHog provides analytics and replay for this site. In the notice, you can choose “Accept” or “Decline”. Accepting allows PostHog cookies and replay. Before you choose or if you select “Decline”, cookieless analytics still runs and replay stays off. The site may also save language and demo display preferences locally in your browser.</p>
     <p>You can reopen your choice at any time using “Cookie Settings” in the footer. A change affects future collection; previously collected information is not automatically deleted. See the <a href="https://posthog.com/privacy" target="_blank" rel="noopener noreferrer">PostHog Privacy Policy</a> for more about its practices.</p>
     <h3>3. Scope of the website and local app</h3>
     <p>This policy concerns the ChatHand website. Its analytics script runs on this website and does not actively read files, terminal contents or other app windows on your computer. The ChatHand app manages its own permissions and data; please consult the information provided with the app.</p>
@@ -10312,7 +10313,7 @@ var EN_ = (function () {
     <p>PostHog may briefly use an IP address and browser information to create a daily changing cookieless identifier or, when cookies are allowed, infer an approximate country or region. The project is configured not to retain visitor IP addresses. Under the current PostHog free plan, analytics events are subject to a one-year retention policy and session replays are retained for 30 days.</p>
     <p>If you choose to open GitHub, X, PayPal or another external link, that service handles information under its own privacy policy.</p>
     <h3>5. Your privacy rights</h3>
-    <p>Depending on applicable law, you may have rights to access, correct or delete information, or object to its processing. You can also change your cookie choice at any time. Because website analytics are not normally linked directly to your name or account, we may need sufficient information to locate a relevant record. Selecting “Essential only” does not restrict access to the site's main content.</p>
+    <p>Depending on applicable law, you may have rights to access, correct or delete information, or object to its processing. You can also change your cookie choice at any time. Because website analytics are not normally linked directly to your name or account, we may need sufficient information to locate a relevant record. Selecting “Decline” does not restrict access to the site's main content.</p>
     <h3>6. Contact us</h3>
     <p>For questions about this policy or your information, contact us through the <a href="https://github.com/kenyupersonal-maker/chathand/issues/new/choose" target="_blank" rel="noopener noreferrer">GitHub feedback page</a>. It is public, so please do not include personal or sensitive information in an issue.</p>
   `;
@@ -10350,12 +10351,12 @@ var EN_ = (function () {
     policyLink.textContent = t('《隐私政策》', 'Privacy Policy');
     policyLink.addEventListener('click', openPolicy);
     consent.querySelector('p').replaceChildren(
-      document.createTextNode(t('本站使用 Cookie 及类似技术以统计访问流量并优化交互体验。详情请参阅', 'This site uses cookies and similar technologies to understand traffic and improve your experience. Please see our ')),
+      document.createTextNode(t('本站使用 Cookie 及类似技术以统计访问流量并优化交互体验。详情请参阅', 'We use cookies to analyze traffic and improve your experience. ')),
       policyLink,
-      document.createTextNode(t('。', ' for details.'))
+      document.createTextNode(t('。', ''))
     );
     consent.querySelector('[data-consent=yes]').textContent = t('接受', 'Accept');
-    consent.querySelector('[data-consent=no]').textContent = t('仅必要项', 'Essential only');
+    consent.querySelector('[data-consent=no]').textContent = t('仅必要项', 'Decline');
     consent.hidden = false;
   }
   const settings = document.querySelector('.ph-settings');
