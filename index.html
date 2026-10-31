@@ -3789,7 +3789,6 @@ html[data-band="1"] .feat + .sec{padding-top:144px}
 .pa .tip-text h2{font-size:32px;line-height:44px}
 .pa .tip-text p{margin-top:4px;font-size:16px;line-height:26.4px}
 .pa .slot{border-color:rgba(35,120,90,.3);background:rgba(255,255,255,.55)}
-.pa .foot .wrap{max-width:1440px}
 .pa .foot-brand p{max-width:none;margin-top:16px;font-size:14px;line-height:26px;color:var(--ink-2)}
 
 /* ---------- 窄屏 ---------- */
@@ -10266,6 +10265,30 @@ var EN_ = (function () {
     html.ph-policy-visible{overflow:hidden}
     @media(max-width:700px){.ph-consent{bottom:16px;width:calc(100% - 32px);padding:16px;gap:12px;align-items:stretch;flex-direction:column}.ph-consent-actions{width:100%}.ph-consent button{flex:1;min-width:0}}
     @media(max-width:480px){.ph-policy-head{padding:18px 20px 14px}.ph-policy-body{padding:18px 20px 24px}}
+    /* Content-sized notice with a narrow-screen layout. */
+    .ph-consent{width:max-content;max-width:calc(100vw - 48px);gap:20px;padding:11px 14px 11px 20px;border-radius:16px;background:rgba(255,255,255,.54);box-shadow:inset 0 1px 0 rgba(255,255,255,.42),0 0 0 1px rgba(20,35,30,.045),0 7px 22px -13px rgba(4,52,40,.12)}
+    .ph-consent p{flex:none;white-space:nowrap}
+    .ph-consent-actions{gap:8px}
+    .ph-consent-actions button{min-width:72px;min-height:36px;padding:7px 14px;border-color:rgba(0,0,0,.055);background:rgba(255,255,255,.26);box-shadow:none;font-size:13px}
+    .ph-consent-actions button:hover{background:rgba(255,255,255,.62);border-color:rgba(0,0,0,.18)}
+    @media(prefers-reduced-transparency:reduce){.ph-consent{background:#fff}}
+    @media(min-width:701px) and (max-width:820px){
+      .ph-consent{gap:16px;padding:11px 14px 11px 18px}
+      .ph-consent-actions button{min-width:72px;padding:7px 12px}
+    }
+    @media(min-width:701px) and (max-width:760px){
+      html[lang^="en"] .ph-consent{width:min(560px,calc(100vw - 32px));max-width:calc(100vw - 32px);border-radius:16px;gap:12px;align-items:stretch;flex-direction:column}
+      html[lang^="en"] .ph-consent p{white-space:normal}
+      html[lang^="en"] .ph-consent-actions{width:100%}
+      html[lang^="en"] .ph-consent-actions button{flex:1;min-width:0}
+    }
+    @media(max-width:700px){
+      .ph-consent{width:min(560px,calc(100vw - 32px));max-width:calc(100vw - 32px);border-radius:16px;gap:12px;align-items:stretch;flex-direction:column}
+      .ph-consent p{white-space:normal}
+      .ph-consent-actions{width:100%}
+      .ph-consent-actions button{flex:1;min-width:0;min-height:40px}
+    }
+
   `;
   document.head.append(style);
   consent.innerHTML = '<h2 id="ph-consent-title"></h2><p></p><div class="ph-consent-actions"><button type="button" data-consent="yes"></button><button type="button" data-consent="no"></button></div>';
@@ -10279,11 +10302,11 @@ var EN_ = (function () {
     <p>本政策说明由 Ken Yu 维护的 ChatHand 官网如何处理访问数据，以及您可以如何管理自己的选择。ChatHand App 与其他服务的数据处理请参阅相应说明。</p>
     <p class="ph-policy-date">生效及更新日期：2026 年 10 月 31 日</p>
     <h3>一、我们收集哪些信息</h3>
-    <p><strong>无 Cookie 访问统计。</strong>您尚未选择或选择“仅必要项”时，网站仍会通过 PostHog 收集不写入统计 Cookie 的访问信息，包括页面浏览、访问时间、滚动深度、版块到达情况，以及下载入口、语言切换、轮播、常见问题和打赏方式等交互。我们还可能收集访问来源、UTM 活动标识、浏览器、设备类型、操作系统和错误类别。此模式不提供国家或地区信息，也无法可靠识别跨天回访。</p>
+    <p><strong>无 Cookie 访问统计。</strong>您尚未选择或选择“拒绝”时，网站仍会通过 PostHog 收集不写入统计 Cookie 的访问信息，包括页面浏览、访问时间、滚动深度、版块到达情况，以及下载入口、语言切换、轮播、常见问题和打赏方式等交互。我们还可能收集访问来源、UTM 活动标识、浏览器、设备类型、操作系统和错误类别。此模式不提供国家或地区信息，也无法可靠识别跨天回访。</p>
     <p><strong>允许 Cookie 后。</strong>PostHog 可以使用 Cookie 识别回访，统计信息可能包含大致国家或地区。我们还会启用页面交互回放，用来了解访客在官网内如何滚动、点击和浏览。</p>
     <p><strong>回放中的遮挡。</strong>输入框、可编辑区域，以及包含收款地址和二维码的卡片会被遮挡。回放只涉及本网站的页面；我们没有开启控制台日志、网络请求正文或 Canvas 画面的录制。</p>
     <h3>二、Cookie 和第三方分析服务</h3>
-    <p>本网站使用 PostHog 提供访问统计与页面回放。您可以在提示条中选择“接受”或“仅必要项”。选择“接受”会允许 PostHog 使用 Cookie 并启用回放；选择“仅必要项”或暂不选择时，基础的无 Cookie 统计仍会运行，回放保持关闭。本网站还可能在浏览器本地保存语言和演示显示偏好。</p>
+    <p>本网站使用 PostHog 提供访问统计与页面回放。您可以在提示条中选择“允许”或“拒绝”。选择“允许”会允许 PostHog 使用 Cookie 并启用回放；选择“拒绝”或暂不选择时，基础的无 Cookie 统计仍会运行，回放保持关闭。本网站还可能在浏览器本地保存语言和演示显示偏好。</p>
     <p>您可以随时点击页脚的“Cookie 偏好设置”重新打开设置并更改选择。更改选择会影响之后的收集；先前已收集的信息不会自动删除。关于服务商的处理方式，可查看 <a href="https://posthog.com/privacy" target="_blank" rel="noopener noreferrer">PostHog 隐私政策</a>。</p>
     <h3>三、本地应用与官网的范围</h3>
     <p>本政策介绍的是 ChatHand 官网。本网站的统计脚本运行在官网页面中，不会主动读取您电脑上的文件、终端内容或其他 App 窗口。ChatHand App 的权限和数据处理属于应用本身，请参阅应用提供的相关说明。</p>
@@ -10292,7 +10315,7 @@ var EN_ = (function () {
     <p>PostHog 可能临时使用 IP 地址和浏览器信息生成每日变化的无 Cookie 统计标识，或在允许 Cookie 时推断大致国家或地区；本项目已设置为不保留访客 IP 地址。按当前 PostHog 免费方案，统计事件适用一年的保留规则，页面回放按 30 天保留。</p>
     <p>您主动打开 GitHub、X、PayPal 或其他外部链接后，相关服务会按其自身的隐私政策处理信息。</p>
     <h3>五、您的隐私权利</h3>
-    <p>根据您所在地适用的法律，您可能享有访问、更正、删除信息或提出异议等权利，也可以随时更改 Cookie 选择。由于网站统计通常不直接关联您的姓名或账户，我们可能需要必要的信息才能定位相关记录。选择“仅必要项”不会限制您浏览本网站的主要内容。</p>
+    <p>根据您所在地适用的法律，您可能享有访问、更正、删除信息或提出异议等权利，也可以随时更改 Cookie 选择。由于网站统计通常不直接关联您的姓名或账户，我们可能需要必要的信息才能定位相关记录。选择“拒绝”不会限制您浏览本网站的主要内容。</p>
     <h3>六、联系我们</h3>
     <p>如对本政策或您的信息有疑问，请通过 <a href="https://github.com/kenyupersonal-maker/chathand/issues/new/choose" target="_blank" rel="noopener noreferrer">GitHub 反馈入口</a>联系我们。该入口公开，请勿在公开问题中填写敏感或个人信息。</p>
   `;
@@ -10348,15 +10371,15 @@ var EN_ = (function () {
     const policyLink = document.createElement('button');
     policyLink.type = 'button';
     policyLink.className = 'ph-policy-link';
-    policyLink.textContent = t('《隐私政策》', 'Privacy Policy');
+    policyLink.textContent = t('隐私政策', 'Privacy Policy');
     policyLink.addEventListener('click', openPolicy);
     consent.querySelector('p').replaceChildren(
-      document.createTextNode(t('本站使用 Cookie 及类似技术以统计访问流量并优化交互体验。详情请参阅', 'We use cookies to analyze traffic and improve your experience. ')),
+      document.createTextNode(t('本站使用 Cookie 以统计访问并优化体验。', 'We use cookies to analyze traffic and improve your experience. ')),
       policyLink,
-      document.createTextNode(t('。', ''))
+      document.createTextNode(t('', ''))
     );
-    consent.querySelector('[data-consent=yes]').textContent = t('接受', 'Accept');
-    consent.querySelector('[data-consent=no]').textContent = t('仅必要项', 'Decline');
+    consent.querySelector('[data-consent=yes]').textContent = t('允许', 'Accept');
+    consent.querySelector('[data-consent=no]').textContent = t('拒绝', 'Decline');
     consent.hidden = false;
   }
   const settings = document.querySelector('.ph-settings');
