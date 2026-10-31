@@ -10301,8 +10301,15 @@ var EN_ = (function () {
     if (!event || !event.properties) return event;
     const p = event.properties;
     p.visit_id = visitId;
+    const consentStatus = window.posthog?.get_explicit_consent_status?.();
+    p.cookie_consent = ['granted', 'denied'].includes(consentStatus) ? consentStatus : 'pending';
     p.language = p.language || language();
     p.site_theme = p.site_theme || 'light';
+    const currentCampaign = new URL(location.href).searchParams;
+    for (const key of campaignKeys) {
+      const value = currentCampaign.get(key);
+      if (validCampaign(value)) p[key] = value;
+    }
     for (const k of ['$current_url','$initial_current_url','$session_entry_url','$session_exit_url']) if (p[k]) p[k] = cleanURL(p[k], true);
     for (const k of ['$referrer','$initial_referrer','$external_click_url']) if (p[k] && p[k] !== '$direct') p[k] = cleanURL(p[k], false);
     for (const k of Object.keys(p)) {
@@ -10406,6 +10413,7 @@ var EN_ = (function () {
       else ph.opt_out_capturing();
       consent.hidden = true;
       begin();
+      send('cookie_preference', { choice: button.dataset.consent === 'yes' ? 'granted' : 'denied' }, true);
     });
     if (ph.get_explicit_consent_status() === 'pending') showConsent();
     begin();
