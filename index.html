@@ -4230,6 +4230,7 @@ html[lang="en"] .d4-kd {
     <div class="foot-brand">
       <a class="brand" href="#top" aria-label="ChatHand"><span class="tile"><svg aria-hidden="true"><use href="#mark"/></svg></span><b>ChatHand</b></a>
       <p data-i18n="v3.foot">ChatHand 是一个免费开源的 Mac 应用，把 ChatGPT 接到你的电脑上：<br>读写文件、跑命令、操作浏览器和桌面 App。代码以 MIT 许可公开在 GitHub。</p>
+      <p><button class="ph-settings" type="button" data-i18n="analytics.notice" disabled>本站使用 PostHog 匿名统计访问情况。</button></p>
     </div>
     <nav class="foot-links" aria-label="链接" data-i18n-aria="foot.label">
       <a href="https://github.com/kenyupersonal-maker/chathand">GitHub</a>
@@ -4285,7 +4286,7 @@ var EN_ = (function () {
 })();
 </script>
 <script>
-/* ChatHand 官网首页：中英文切换、安装按钮、首屏演示、场景演示。不连任何外部服务，不记统计。 */
+/* ChatHand 官网首页：中英文切换、安装按钮、首屏演示、场景演示。 */
 (() => {
   'use strict';
 
@@ -4343,6 +4344,7 @@ var EN_ = (function () {
     'v3.film.play': 'Play demo',
     'v3.film.replay': 'Replay',
     'v3.foot': 'ChatHand is a free, open-source Mac app that connects ChatGPT to your computer:<br>read and write files, run commands, and control your browser and desktop apps. MIT-licensed on GitHub.',
+    'analytics.notice': 'This site uses PostHog for anonymous usage analytics.',
     'nav.features': 'Features', 'nav.cases': 'Capabilities', 'nav.safety': 'Safety', 'nav.get': 'Download', 'nav.install': 'Install', 'nav.label': 'Page',
     'hero.title': 'Give ChatGPT hands.<br>Let it work on your Mac.',
     'hero.lede': 'Files, commands, your browser and desktop apps. ChatHand runs on your Mac and plugs into your own ChatGPT account—on desktop, web, or phone.',
@@ -9433,15 +9435,15 @@ var EN_ = (function () {
     list.forEach((m, i) => {
       const name = pickWords(m.name), label = m.link ? (EN_ ? 'Link' : '链接') : (EN_ ? 'Address' : '地址');
       if (m.group === 'crypto' && !groupShown) { const group = el('span', 'tp-gl', EN_ ? 'Crypto' : '加密货币'); group.setAttribute('aria-hidden', 'true'); nav.append(group); groupShown = true; }
-      const tab = el('button', 'tp-tab'); tab.type = 'button'; tab.setAttribute('role', 'tab'); tab.id = 'tp-t' + i; tab.dataset.i = String(i); tab.dataset.g = m.group || 'main';
+      const tab = el('button', 'tp-tab'); tab.type = 'button'; tab.setAttribute('role', 'tab'); tab.id = 'tp-t' + i; tab.dataset.i = String(i); tab.dataset.g = m.group || 'main'; tab.dataset.method = m.id;
       tab.setAttribute('aria-controls', 'tp-p' + i); tab.setAttribute('aria-selected', String(i === 0)); tab.tabIndex = i === 0 ? 0 : -1;
       const logoWrap = el('span', m.link ? 'tp-lg t' : 'tp-lg'); logoWrap.setAttribute('aria-hidden', 'true');
       const logo = el('img'); logo.src = m.logo; logo.alt = ''; logoWrap.append(logo); tab.append(logoWrap, el('span', 'tp-tn', name));
       if (m.tag) tab.append(el('small', '', m.tag)); nav.append(tab);
 
       const page = el('div', i === 0 ? 'tp-page on' : 'tp-page'); page.setAttribute('role', 'tabpanel'); page.id = 'tp-p' + i;
-      page.setAttribute('aria-labelledby', 'tp-t' + i); page.dataset.i = String(i); page.hidden = i !== 0;
-      const pc = el('div', 'tp-pc'), qr = el('div', m.link ? 'tp-qr gen' : 'tp-qr'), img = el('img');
+      page.setAttribute('aria-labelledby', 'tp-t' + i); page.dataset.i = String(i); page.dataset.method = m.id; page.hidden = i !== 0;
+      const pc = el('div', 'tp-pc ph-no-capture'), qr = el('div', m.link ? 'tp-qr gen' : 'tp-qr'), img = el('img');
       img.src = qrImage(m, m.note !== 'alipay', !m.link); img.width = 200; img.height = 200; img.loading = 'lazy'; img.decoding = 'async';
       img.alt = m.link ? (EN_ ? `${name} tip QR code` : `${name} 打赏二维码`) : m.note === 'alipay' ? (EN_ ? `${name} QR code` : `${name}收款码`) : (EN_ ? `${name} QR code${m.network ? ' (' + m.network.replace(/\s*\(([^)]+)\)/g, ' $1') + ')' : ''}` : `${name} 收款二维码${m.network ? '（' + m.network + '）' : ''}`);
       qr.append(img);
@@ -9491,7 +9493,9 @@ var EN_ = (function () {
   function go(i) {
     i = Math.max(0, Math.min(N - 1, i));
     if (i === cur) return;
+    const previous = cur;
     cur = i;
+    if (previous >= 0) document.dispatchEvent(new CustomEvent('ch:tip-method-change', { detail: { method: tabs[i]?.dataset.method } }));
     pages.forEach((p, k) => {
       p.classList.toggle('on', k === i);
       p.classList.toggle('up', k < i);
@@ -9591,6 +9595,7 @@ var EN_ = (function () {
       s.addRange(r);
     }
     btn.classList.toggle('ok', ok);
+    if (ok) document.dispatchEvent(new CustomEvent('ch:tip-copied', { detail: { method: btn.closest('.tp-page')?.dataset.method } }));
     w.textContent = ok ? (EN_ ? 'Copied' : '已复制') : (EN_ ? 'Selected' : '已选中');
     live.textContent = ok ? what + (EN_ ? ' copied' : '已复制') : what + (EN_ ? ' selected—press ⌘C to copy' : '已选中，请手动复制');
     clearTimeout(btn._t);
@@ -10213,6 +10218,258 @@ var EN_ = (function () {
 <link rel="stylesheet" href="section-motion.css?v=20261031-2">
 <script src="section-motion.js?v=20261031-1"></script>
 -->
+<script>
+/* PostHog: anonymous site analytics with visitor-controlled cookies and replay. */
+(() => {
+  'use strict';
+  const isEnglish = () => document.documentElement.lang.toLowerCase().startsWith('en');
+  const language = () => isEnglish() ? 'en' : 'zh';
+  // A new, in-memory page-visit ID keeps aggregate visit metrics usable without cookies.
+  const visitId = (window.crypto && typeof crypto.randomUUID === 'function') ? crypto.randomUUID() : Date.now().toString(36) + '-' + Math.random().toString(36).slice(2);
+  const t = (zh, en) => isEnglish() ? en : zh;
+  const consent = document.createElement('section');
+  consent.className = 'ph-consent ph-no-capture';
+  consent.hidden = true;
+  consent.setAttribute('role', 'dialog');
+  consent.setAttribute('aria-labelledby', 'ph-consent-title');
+  const style = document.createElement('style');
+  style.textContent = `
+    .ph-consent[hidden]{display:none}
+    .ph-consent{position:fixed;z-index:10000;left:50%;bottom:22px;transform:translateX(-50%);display:flex;align-items:center;gap:24px;width:min(1160px,calc(100% - 48px));box-sizing:border-box;padding:14px 18px 14px 22px;border-radius:16px;background:rgba(255,255,255,.93);-webkit-backdrop-filter:blur(28px) saturate(1.3);backdrop-filter:blur(28px) saturate(1.3);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),inset 0 1px 0 #fff,0 0 0 .5px rgba(0,0,0,.12),0 2px 6px rgba(0,0,0,.05),0 26px 60px -24px rgba(4,52,40,.36);color:#161b19;font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;transition:transform .38s var(--ease),opacity .3s ease}
+    .ph-consent.is-leaving{transform:translate(-50%,calc(100% + 28px));opacity:0;pointer-events:none}
+    @media(prefers-reduced-motion:reduce){.ph-consent{transition:none}}
+    .ph-consent h2{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    .ph-consent p{flex:1;min-width:0;margin:0}
+    .ph-consent-actions{display:flex;flex:none;align-items:center;gap:10px}
+    .ph-consent button{min-width:100px;min-height:42px;padding:9px 18px;border:1px solid rgba(0,0,0,.14);border-radius:999px;background:rgba(255,255,255,.72);box-shadow:0 1px 2px rgba(0,0,0,.04);color:#161b19;font:500 14px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;cursor:pointer}
+    .ph-consent button:hover{background:#fff;border-color:rgba(0,0,0,.24)}
+    .ph-consent button:focus-visible,.ph-settings:focus-visible{outline:2px solid #146b5d;outline-offset:3px}
+    .ph-settings{border:0;background:none;padding:0;color:inherit;text-decoration:underline;cursor:pointer;font:inherit}
+    .ph-settings:disabled{text-decoration:none;cursor:default}
+    @media(max-width:700px){.ph-consent{bottom:16px;width:calc(100% - 32px);padding:16px;gap:12px;align-items:stretch;flex-direction:column}.ph-consent-actions{width:100%}.ph-consent button{flex:1;min-width:0}}
+  `;
+  document.head.append(style);
+  consent.innerHTML = '<h2 id="ph-consent-title"></h2><p></p><div class="ph-consent-actions"><button type="button" data-consent="yes"></button><button type="button" data-consent="no"></button></div>';
+  document.body.append(consent);
+  let consentLastY = scrollY, consentDown = 0, dismissTimer;
+  function dismissConsent() {
+    if (consent.hidden || consent.classList.contains('is-leaving')) return;
+    consent.classList.add('is-leaving');
+    clearTimeout(dismissTimer);
+    dismissTimer = setTimeout(() => { consent.hidden = true; }, 400);
+  }
+  function showConsent() {
+    clearTimeout(dismissTimer);
+    consent.classList.remove('is-leaving');
+    consentLastY = scrollY;
+    consentDown = 0;
+    consent.querySelector('h2').textContent = t('访问统计设置', 'Analytics preferences');
+    consent.querySelector('p').textContent = t('本站使用 PostHog 统计访问情况。允许后会使用 Cookie 并录制经过遮挡的页面操作；未允许时仍会进行无 Cookie 的匿名统计。', 'This site uses PostHog for analytics. Allowing cookies enables masked session replay; otherwise, only anonymous, cookieless analytics are used.');
+    consent.querySelector('[data-consent=yes]').textContent = t('允许 Cookie', 'Allow cookies');
+    consent.querySelector('[data-consent=no]').textContent = t('拒绝 Cookie', 'Decline cookies');
+    consent.hidden = false;
+  }
+  const settings = document.querySelector('.ph-settings');
+  if (settings) settings.addEventListener('click', showConsent);
+  addEventListener('scroll', () => {
+    if (consent.hidden || consent.classList.contains('is-leaving')) return;
+    const y = Math.max(0, scrollY);
+    consentDown += Math.max(0, y - consentLastY);
+    consentLastY = y;
+    if (consentDown >= innerHeight * 3) dismissConsent();
+  }, { passive: true });
+
+  // Keep campaign labels and source domains; discard URL fragments, arbitrary query data and credentials.
+  const campaignKeys = ['utm_source','utm_medium','utm_campaign','utm_term','utm_content','utm_id'];
+  const validCampaign = value => typeof value === 'string' && value.length <= 80 && /^[\p{L}\p{N}_. -]+$/u.test(value);
+  function cleanURL(value, keepCampaign) {
+    try {
+      const u = new URL(value, location.href);
+      if (!/^https?:$/.test(u.protocol)) return '';
+      const out = u.origin + (keepCampaign ? u.pathname : '/');
+      if (!keepCampaign) return out;
+      const q = new URLSearchParams();
+      for (const key of campaignKeys) {
+        const v = u.searchParams.get(key);
+        if (validCampaign(v)) q.set(key, v);
+      }
+      const query = q.toString();
+      return out + (query ? '?' + query : '');
+    } catch { return ''; }
+  }
+  function beforeSend(event) {
+    if (!event || !event.properties) return event;
+    const p = event.properties;
+    p.visit_id = visitId;
+    p.language = p.language || language();
+    p.site_theme = p.site_theme || 'light';
+    for (const k of ['$current_url','$initial_current_url','$session_entry_url','$session_exit_url']) if (p[k]) p[k] = cleanURL(p[k], true);
+    for (const k of ['$referrer','$initial_referrer','$external_click_url']) if (p[k] && p[k] !== '$direct') p[k] = cleanURL(p[k], false);
+    for (const k of Object.keys(p)) {
+      if (/^\$?(?:initial_)?utm_/i.test(k) && !validCampaign(String(p[k]))) delete p[k];
+      if (/^\$(?:search|url_hash|initial_url_hash)$/i.test(k)) delete p[k];
+    }
+    return event;
+  }
+  const js = document.createElement('script');
+  js.async = true;
+  js.src = 'https://us-assets.i.posthog.com/static/array.js';
+  js.onload = () => {
+    const ph = window.posthog;
+    if (!ph || typeof ph.init !== 'function') return;
+    ph.init('phc_kpxbwHXvs54UUVVhqHptARupg3fKyYdjMZYDB3mZzaLF', {
+      api_host: 'https://us.i.posthog.com',
+      defaults: '2026-08-30',
+      cookieless_mode: 'on_reject',
+      opt_out_capturing_by_default: true,
+      person_profiles: 'never',
+      autocapture: { capture_copied_text: false },
+      mask_all_text: true,
+      mask_all_element_attributes: true,
+      capture_pageview: false,
+      capture_pageleave: true,
+      capture_heatmaps: true,
+      capture_performance: false,
+      capture_exceptions: false,
+      disable_capture_url_hashes: true,
+      before_send: beforeSend,
+      session_recording: {
+        maskAllInputs: true,
+        blockSelector: '.tp-pc, .tp-addr, .tp-qr, [contenteditable], input, textarea, select',
+        recordHeaders: false,
+        recordBody: false,
+        maskCapturedNetworkRequestFn: request => {
+          if (request.name) request.name = cleanURL(request.name, true);
+          return request;
+        }
+      }
+    });
+    if (settings) settings.disabled = false;
+    let started = false;
+    const send = (name, props = {}, immediate = false) => {
+      if (!started || !ph.is_capturing()) return;
+      ph.capture(name, { language: language(), site_theme: 'light', ...props }, immediate ? { send_instantly: true, transport: 'sendBeacon' } : undefined);
+    };
+    const sectionNames = new Map();
+    const seen = new Set(), active = new Map(), seconds = new Map();
+    let engaged = 0, lastAction = -Infinity, tickTime = performance.now();
+    function flush() {
+      if (engaged >= 1) { send('engaged_time', { seconds: Math.round(engaged * 10) / 10 }, true); engaged = 0; }
+      for (const [name, value] of seconds) {
+        if (value >= 1) { send('section_time', { section: name, seconds: Math.round(value * 10) / 10 }, true); seconds.set(name, 0); }
+      }
+    }
+    function advance() {
+      const now = performance.now(), dt = Math.min(Math.max((now - tickTime) / 1000, 0), 2);
+      tickTime = now;
+      if (document.hidden) return;
+      if (now - lastAction <= 30000) engaged += dt;
+      for (const name of new Set([...active].filter(([, on]) => on).map(([el]) => sectionNames.get(el)))) seconds.set(name, (seconds.get(name) || 0) + dt);
+    }
+    function begin() {
+      if (started) return;
+      started = true; tickTime = performance.now();
+      send('$pageview', { '$current_url': cleanURL(location.href, true) });
+      for (const [selector, name] of [['#top','hero'],['#features','features'],['#cases','cases'],['#safety','safety'],['#get .ag-main','download'],['#get .ag-self','download'],['#get .faq','faq'],['#support','support']]) {
+        const el = document.querySelector(selector); if (el) sectionNames.set(el, name);
+      }
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver(entries => {
+          for (const e of entries) {
+            const on = e.isIntersecting && e.intersectionRect.height >= Math.min(64, e.boundingClientRect.height * 0.25);
+            active.set(e.target, on);
+            const name = sectionNames.get(e.target);
+            if (on && !seen.has(name)) { seen.add(name); send('section_view', { section: name }); }
+          }
+        }, { threshold: [0, 0.01, 0.1, 0.25, 0.5, 1] });
+        sectionNames.forEach((_, el) => io.observe(el));
+      }
+      checkScroll();
+      setInterval(advance, 1000);
+      setInterval(flush, 15000);
+    }
+    const reached = new Set();
+    function checkScroll() {
+      if (!started) return;
+      const max = Math.max(1, document.documentElement.scrollHeight - innerHeight);
+      const pct = Math.min(100, Math.round((scrollY / max) * 100));
+      for (const n of [25,50,75,100]) if (pct >= n && !reached.has(n)) { reached.add(n); send('scroll_depth', { percent: n }); }
+    }
+    ['pointerdown','pointermove','keydown','scroll','touchstart'].forEach(type => addEventListener(type, () => { lastAction = performance.now(); }, { passive: true }));
+    addEventListener('scroll', checkScroll, { passive: true });
+    document.addEventListener('visibilitychange', () => { advance(); if (document.hidden) flush(); });
+    addEventListener('pagehide', () => { advance(); flush(); });
+    consent.addEventListener('click', event => {
+      const button = event.target.closest('button[data-consent]'); if (!button) return;
+      if (started) { advance(); flush(); }
+      if (button.dataset.consent === 'yes') ph.opt_in_capturing({ captureEventName: false });
+      else ph.opt_out_capturing();
+      consent.hidden = true;
+      begin();
+    });
+    if (ph.get_explicit_consent_status() === 'pending') showConsent();
+    begin();
+
+    const methods = new Set(['paypal','alipay','btc','eth','usdt','usdc','bnb','sol']);
+    function methodFor(el) {
+      const page = el.closest('.tp-page');
+      const tab = el.closest('.tp-tab');
+      const value = (page || tab)?.dataset.method;
+      return methods.has(value) ? value : 'other';
+    }
+    document.addEventListener('ch:tip-method-change', event => {
+      const method = event.detail?.method;
+      send('tip_method_select', { method: methods.has(method) ? method : 'other' });
+    });
+    document.addEventListener('ch:tip-copied', event => {
+      const method = event.detail?.method;
+      send('tip_address_copy', { method: methods.has(method) ? method : 'other' });
+    });
+    document.addEventListener('click', event => {
+      const el = event.target instanceof Element ? event.target : null; if (!el) return;
+      if (el.closest('[data-lang-toggle]')) send('language_change', { to_language: language() === 'en' ? 'zh' : 'en' }, true);
+      const summary = el.closest('.qa summary');
+      if (summary && !summary.parentElement.open) {
+        const id = summary.querySelector('[data-i18n]')?.dataset.i18n || '';
+        send('faq_expand', { faq_id: /^faq\.[a-z]+\.q$/.test(id) ? id.split('.')[1] : 'other' });
+      }
+      if (el.closest('[data-copy-prompt]')) send('prompt_copy');
+      const a = el.closest('a[href]'); if (!a) return;
+      if (a.matches('[data-download]')) { send('download_click', { location: a.closest('#get') ? 'download_section' : 'hero' }, true); return; }
+      if (a.matches('[data-install]')) { send('install_click', { location: a.closest('#get') ? 'download_section' : 'hero' }, true); return; }
+      if (a.closest('.tp-page') && methodFor(a) === 'paypal') { send('tip_paypal_click', { method: 'paypal' }, true); return; }
+      let u; try { u = new URL(a.href); } catch { return; }
+      if (u.hostname === 'github.com') {
+        if (u.pathname.includes('/releases')) send('release_click', {}, true); else send('github_click', {}, true);
+      } else if (u.hostname === 'x.com' || u.hostname === 'twitter.com') send('x_click', {}, true);
+      else if (/^https?:$/.test(u.protocol) && u.origin !== location.origin) send('external_link_click', { destination: u.hostname }, true);
+    }, true);
+
+    const car = document.querySelector('.car-track');
+    if (car) {
+      let current = [...car.querySelectorAll('.car-item')].findIndex(x => x.classList.contains('on'));
+      new MutationObserver(() => {
+        const index = [...car.querySelectorAll('.car-item')].findIndex(x => x.classList.contains('on'));
+        if (index >= 0 && index !== current) { current = index; send('carousel_change', { index: index + 1 }); }
+      }).observe(car, { subtree: true, attributes: true, attributeFilter: ['class'] });
+    }
+    document.querySelectorAll('.fctl').forEach((button, i) => {
+      let state = button.dataset.s;
+      new MutationObserver(() => {
+        const next = button.dataset.s;
+        if (next !== state && next === 'play') send('demo_play', { player: i + 1 });
+        if (next !== state && next === 'end') send('demo_complete', { player: i + 1 });
+        state = next;
+      }).observe(button, { attributes: true, attributeFilter: ['data-s'] });
+    });
+    let errorCount = 0;
+    addEventListener('error', event => { if (errorCount++ < 10) send('site_error', { category: event.target === window ? 'script' : 'resource' }); }, true);
+    addEventListener('unhandledrejection', () => { if (errorCount++ < 10) send('site_error', { category: 'promise' }); });
+  };
+  document.head.append(js);
+})();
+
+</script>
 </body>
 </html>
 
