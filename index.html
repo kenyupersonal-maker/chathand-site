@@ -3669,12 +3669,14 @@ html[data-band="1"] .feat + .sec{padding-top:144px}
 .pa .af-q h3{max-width:440px}
 .pa .af-c p{margin-top:12px;font-size:18px;line-height:1.6;color:var(--ink-2);text-wrap:pretty}
 .pa .af-art{margin-top:auto;padding-top:8px}
-.pa .qa-fit{border-radius:0;background:none}
+/* 视差只由最外层圆角卡片裁切；放开配图画布，避免上移时露出 335px 画布的硬截边。 */
+.pa .qa-fit{border-radius:0;background:none;overflow:visible}
+.pa .qa-fit > .qt{overflow:visible}
 /* 图：570×335（窄屏 440×335） */
 .pa .qt .qa-win{left:48px;top:58px;width:478px;height:350px;border-radius:16px;background:rgba(255,255,255,.72);box-shadow:0 10.6px 18.2px rgba(0,132,88,.13);isolation:isolate}
-/* 外框：一圈不转的绿色渐变描边，左上深、往右下变浅（Ken 10/30）。描边关在窗口自己这一层里，不压右上角那张 token 卡 */
-.pa .qa-ring{position:absolute;inset:0;z-index:3;padding:1.5px;border-radius:inherit;pointer-events:none;
-  background:linear-gradient(135deg,#00987B 0%,#00BF99 24%,#4FCDA6 48%,#9FE3C9 74%,#D3F1E5 100%);
+/* 薄而浅的薄荷绿渐变，四边统一为 1px，去掉左上角的重色。 */
+.pa .qa-ring{position:absolute;inset:0;z-index:3;box-sizing:border-box;padding:1px;border-radius:inherit;pointer-events:none;opacity:.72;
+  background:linear-gradient(135deg,#5ACCB1 0%,#79D7BD 28%,#A4E3D1 55%,#C6EEE0 78%,#E1F5EE 100%);
   -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
 .pa .qt .qa-win .g-head .mdl{margin-left:2px;color:#8F8F8F;font-weight:400}
 .pa .qt .qa-win p.ai{margin:0;font-size:14.5px;line-height:1.6;color:#0D0D0D}
@@ -3699,6 +3701,8 @@ html[data-band="1"] .feat + .sec{padding-top:144px}
 .pa{--top-h:64px}
 .pa .cases[data-pinned]{height:var(--pin-h);padding-bottom:0}
 .pa .cases[data-pinned] .car-pin{position:sticky;top:var(--top-h);display:flex;flex-direction:column;justify-content:center;min-height:calc(100svh - var(--top-h));padding:20px 0 4px}
+/* 标题跟着滚动淡出；不钉住时沿用原来的标题。 */
+.pa .cases[data-pinned]>.wrap{position:relative;z-index:2;will-change:transform,opacity}
 .pa .cases:not([data-pinned]) .car-pin{padding-top:48px}
 .pa .car-pin .car{margin-top:0}
 /* 画面宽度：钉住时整块要在一屏里放下，所以也按屏幕高度算（文字、圆点和上下留白一共约 300px）。
@@ -5573,14 +5577,55 @@ var EN_ = (function () {
      Ken 10/30：照这个走法不变，只让它跑得顺（每帧直接写位置、不再一次重画五段）。
      屏幕太矮放不下、减少动态效果、切到左右图文时不钉，回到原来的轮播。 */
   const pinEl = cases.dataset.pin && car ? $('.car-pin', cases) : null, headEl = pinEl && pinEl.previousElementSibling;
-  const LEAD = .2, TAIL = .4, PH = .12;  // 钉住后先停多久、翻完再停多久（按「一张」的滚动距离算）；每张前后停住的那一小段
-  const PIN = { on: false, top: 64, head: 0, step: 0, pos: 0, w: 0, h: 0, dir: 0, shown: null, pitch: 0 };
+  const LEAD = .2, TAIL = .4;
+  // 案例区已确定的动效参数。
+  const MOTION = Object.freeze({
+    range: 160, lift: 101, duration: 550,
+    moveCurve: 'smootherstep', fadeCurve: 'easeOut', cardLift: 56, cardCurve: 'easeOut',
+    landing: 0, bounce: 0, damping: 7, frequency: 2.5,
+    x1: .22, y1: 1, x2: .36, y2: 1,
+    carDuration: 215, carCurve: 'smoothstep', stepRatio: .62, hold: .12
+  });
+  const HEAD_FADE = MOTION;
+  function motionCurve(name, value) {
+    const p = clamp(value);
+    if (p === 0 || p === 1) return p;
+    if (name === 'linear') return p;
+    if (name === 'smoothstep') return p * p * (3 - 2 * p);
+    if (name === 'smootherstep') return p * p * p * (p * (6 * p - 15) + 10);
+    if (name === 'easeIn') return p * p * p;
+    if (name === 'easeOut') return 1 - Math.pow(1 - p, 3);
+    if (name === 'easeInOut') return eio(p);
+    if (name === 'back') {
+      const amount = 1.70158 * MOTION.bounce;
+      return 1 + (amount + 1) * Math.pow(p - 1, 3) + amount * Math.pow(p - 1, 2);
+    }
+    if (name === 'spring') {
+      return 1 - Math.pow(1 - p, 3) + MOTION.bounce * .4 * Math.sin(p * Math.PI * 2 * MOTION.frequency) * Math.sin(Math.PI * p) * Math.exp(-MOTION.damping * p * .18);
+    }
+    if (name === 'bezier') {
+      const bez = (t, a, b) => 3 * (1 - t) * (1 - t) * t * a + 3 * (1 - t) * t * t * b + t * t * t;
+      let lo = 0, hi = 1;
+      for (let i = 0; i < 16; i++) {
+        const t = (lo + hi) / 2;
+        if (bez(t, MOTION.x1, MOTION.x2) < p) lo = t; else hi = t;
+      }
+      return bez((lo + hi) / 2, MOTION.y1, MOTION.y2);
+    }
+    return p;
+  }
+  const PIN = { on: false, top: 64, head: 0, step: 0, pos: 0, w: 0, h: 0, dir: 0, shown: null, pitch: 0, titleBase: 0, titleProgress: null, titleFrom: 0, titleGoal: null, titleStarted: 0 };
   function pinGeo() {
     if (!pinEl) return;
+    // 重排前保留正在观看的案例及滚动进度；窗口高度会改变每张的滚动距离。
+    const oldS = PIN.top - cases.getBoundingClientRect().top - PIN.head;
+    const oldProgress = PIN.on && PIN.step && cases.hasAttribute('data-pinned') && oldS >= 0 && oldS <= (LEAD + scenes.length - 1 + TAIL) * PIN.step ? oldS / PIN.step : null;
     PIN.w = innerWidth; PIN.h = innerHeight;
     // 一张的宽 + 间距（像素）：每帧直接写 translate，不写继承的 CSS 变量
     PIN.pitch = car ? (items[0] ? items[0].offsetWidth : 0) + (parseFloat(getComputedStyle(track).columnGap) || 28) : 0;
     PIN.shown = null;
+    PIN.titleProgress = null;
+    PIN.titleGoal = null;
     PIN.top = ($('.top') || {}).offsetHeight || 0;
     html.style.setProperty('--top-h', PIN.top + 'px');
     // 手机上不钉（画面小、整屏空，一划一张更顺手）
@@ -5588,22 +5633,36 @@ var EN_ = (function () {
     // 轮播本身（文字 + 画面 + 圆点）放得进标题栏下面那一屏才钉
     if (on) on = car.getBoundingClientRect().height + 16 <= innerHeight - PIN.top;
     PIN.on = on;
+    if (!on) { headEl.style.removeProperty('transform'); headEl.style.removeProperty('opacity'); headEl.style.removeProperty('pointer-events'); car.style.removeProperty('transform'); }
     if (!on && cases.dataset.c === 'car') { tooShort = true; place(); return; }  // 横屏但放不下：平铺
     if (!on) { delete cases.dataset.pinned; cases.style.removeProperty('--pin-h'); return; }
     cases.dataset.pinned = '1';
-    PIN.step = Math.round(Math.max(380, .62 * innerHeight));
-    PIN.head = headEl.getBoundingClientRect().bottom - cases.getBoundingClientRect().top;
+    PIN.step = Math.round(Math.max(240, MOTION.stepRatio * innerHeight));
+    PIN.head = (parseFloat(getComputedStyle(cases).paddingTop) || 0) + headEl.offsetHeight;
     const len = (LEAD + scenes.length - 1 + TAIL) * PIN.step;
     cases.style.setProperty('--pin-h', Math.round(PIN.head + pinEl.offsetHeight + len) + 'px');
+    // 标题的视觉位置跟随原有居中轮播，未进入淡出区间时两级标题相隔 48px。
+    const style = getComputedStyle(pinEl), topPad = parseFloat(style.paddingTop) || 0, bottomPad = parseFloat(style.paddingBottom) || 0;
+    const capBox = $('.car-caps', car).getBoundingClientRect().height;
+    const capOffset = capBox - caps[idx].getBoundingClientRect().height;
+    const centeredTop = topPad + Math.max(0, (pinEl.offsetHeight - topPad - bottomPad - car.getBoundingClientRect().height) / 2);
+    // 标题起点固定；上移幅度只参与动画位移，不再改变起点或卡片位置。
+    PIN.titleBase = centeredTop + capOffset - 48 + 56;
+    if (oldProgress !== null) {
+      const start = scrollY + cases.getBoundingClientRect().top + PIN.head - PIN.top;
+      const target = start + oldProgress * PIN.step;
+      if (Math.abs(target - scrollY) > 1) scrollTo({ top: target, behavior: 'instant' });
+    }
   }
   const pinS = () => PIN.top - cases.getBoundingClientRect().top - PIN.head;  // 钉住以后往下滚了多少
   function pinTo(j) { scrollTo({ top: Math.round(scrollY - pinS() + (LEAD + j) * PIN.step), behavior: RM.matches ? 'instant' : 'smooth' }); }
-  /* 滚动位置 → 画面停在第几张（带小数）：每张前后 PH 那一段停住，中间缓进缓出 */
-  function pinGoal() {
-    const n = scenes.length, r = clamp(pinS() / PIN.step - LEAD, 0, n - 1), k = Math.floor(r);
+  document.addEventListener('module-motion:preview', () => { PIN.titleProgress = null; PIN.titleGoal = null; });
+  /* 滚动位置 → 画面停在第几张（带小数）：每张前后停留，中间按曲线移动 */
+  function pinGoal(scroll) {
+    const n = scenes.length, r = clamp(scroll / PIN.step - LEAD, 0, n - 1), k = Math.floor(r);
     if (k >= n - 1) return n - 1;
-    const u = clamp((r - k - PH) / (1 - 2 * PH));
-    return k + u * u * (3 - 2 * u);
+    const u = clamp((r - k - MOTION.hold) / (1 - 2 * MOTION.hold));
+    return k + motionCurve(MOTION.carCurve, u);
   }
   if (pinEl) {
     let lastY = scrollY, timer = 0;
@@ -5612,7 +5671,7 @@ var EN_ = (function () {
       const r = pinS() / PIN.step - LEAD;
       if (r <= 0 || r >= scenes.length - 1) return;
       const k = Math.floor(r), f = r - k;
-      if (f <= PH || f >= 1 - PH) return;
+      if (f <= MOTION.hold || f >= 1 - MOTION.hold) return;
       // 顺着刚才滑的方向停到那一张，不往回拽：原来滚一格（不到 35%）一停就被拉回原处，鼠标滚轮一格一格滚根本过不去（Ken 10/30）
       pinTo(PIN.dir > 0 ? k + 1 : PIN.dir < 0 ? k : f > .5 ? k + 1 : k);
     };
@@ -5655,10 +5714,35 @@ var EN_ = (function () {
   /* 每帧：画面横着走到该在的位置；钉住时中间换了一张就从头播那一张 */
   function carFrame(dt) {
     if (!car || cases.dataset.c !== 'car') return;
-    const goal = PIN.on ? pinGoal() : idx;
-    if (RM.matches || PIN.shown === null) PIN.pos = goal;
+    const scroll = PIN.on ? pinS() : 0;
+    if (PIN.on) {
+      const target = clamp((scroll + HEAD_FADE.range) / HEAD_FADE.range);
+      if (PIN.titleProgress === null || HEAD_FADE.duration === 0) {
+        PIN.titleProgress = target;
+        PIN.titleFrom = PIN.titleProgress; PIN.titleGoal = target; PIN.titleStarted = performance.now();
+      } else {
+        // 每次滚动更新目标；停下后仍按设置的时长完成跟随，端点不截断动画。
+        if (Math.abs(target - PIN.titleGoal) > .00001) {
+          PIN.titleFrom = PIN.titleProgress; PIN.titleGoal = target; PIN.titleStarted = performance.now();
+        }
+        PIN.titleProgress = lerp(PIN.titleFrom, PIN.titleGoal, clamp((performance.now() - PIN.titleStarted) / HEAD_FADE.duration));
+      }
+      const p = clamp(PIN.titleProgress);
+      const move = motionCurve(MOTION.moveCurve, p);
+      const fade = motionCurve(MOTION.fadeCurve, p);
+      const cardMove = motionCurve(MOTION.cardCurve, p);
+      // 收尾补偿按已确定的参数保持关闭。
+      const approach = MOTION.landing > 0 ? clamp(-scroll / MOTION.landing) : 0;
+      const landing = MOTION.landing * (approach * approach * approach * (6 - 8 * approach + 3 * approach * approach) - approach);
+      headEl.style.transform = `translateY(${(PIN.titleBase - HEAD_FADE.lift * move).toFixed(2)}px)`;
+      car.style.transform = `translateY(${(MOTION.cardLift * (1 - cardMove) + landing).toFixed(2)}px)`;
+      headEl.style.opacity = clamp(1 - fade).toFixed(4);
+      headEl.style.pointerEvents = fade >= .999 ? 'none' : '';
+    }
+    const goal = PIN.on ? pinGoal(scroll) : idx;
+    if (RM.matches || PIN.shown === null || (PIN.on && MOTION.carDuration === 0)) PIN.pos = goal;
     else {
-      PIN.pos += (goal - PIN.pos) * (1 - Math.exp(-(PIN.on ? 14 : 6) * dt));
+      PIN.pos += (goal - PIN.pos) * (1 - Math.exp(-(PIN.on ? 3000 / MOTION.carDuration : 6) * dt));
       if (Math.abs(goal - PIN.pos) < .0004) PIN.pos = goal;
     }
     if (PIN.on) {
@@ -5774,6 +5858,8 @@ var EN_ = (function () {
     go, opt, scenes, hero,
     get car() { return { s: C.s, idx, t: +scenes[idx].t.toFixed(2), rest: +C.rest.toFixed(2), pin: PIN.on, pos: +PIN.pos.toFixed(3), step: PIN.step }; },
     pinTo: j => pinTo(j), pinGeo,
+    get motion() { return { ...MOTION }; },
+    get entryStartY() { return scrollY - pinS() - MOTION.range - 12; },
     get rows() { return scenes.map(p => p.s + '@' + p.t.toFixed(1)).join(' '); },
   };
 
@@ -10123,6 +10209,10 @@ var EN_ = (function () {
 })();
 
 </script>
+<!-- 模块入场和配图视差暂不启用；需要时取消下面两行的注释。
+<link rel="stylesheet" href="section-motion.css?v=20261031-2">
+<script src="section-motion.js?v=20261031-1"></script>
+-->
 </body>
 </html>
 
