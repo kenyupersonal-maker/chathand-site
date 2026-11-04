@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "repository": "kenyupersonal-maker/chathand",
-  "collected_at": "2026-11-04T03:29:26.306Z",
+  "collected_at": "2026-11-04T04:29:43.258Z",
   "traffic": {
     "views": 44,
     "unique_visitors": 5,
@@ -12,7 +12,7 @@
     "stars": 0,
     "forks": 0,
     "dmg_downloads": 31,
-    "other_file_downloads": 760,
+    "other_file_downloads": 761,
     "dmg_asset_count": 20,
     "release_count": 5
   }
