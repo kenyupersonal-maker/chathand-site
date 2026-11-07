@@ -1,0 +1,182 @@
+{
+  "schema_version": 1,
+  "repository": "kenyupersonal-maker/chathand",
+  "collected_at": "2026-11-07T10:56:36.997Z",
+  "traffic": {
+    "views": 55,
+    "unique_visitors": 7,
+    "window_start": "2026-10-24T00:00:00Z",
+    "window_end": "2026-11-06T00:00:00Z",
+    "daily": [
+      {
+        "day": "2026-10-24",
+        "views": 0,
+        "unique_visitors": 0
+      },
+      {
+        "day": "2026-10-25",
+        "views": 0,
+        "unique_visitors": 0
+      },
+      {
+        "day": "2026-10-26",
+        "views": 0,
+        "unique_visitors": 0
+      },
+      {
+        "day": "2026-10-27",
+        "views": 0,
+        "unique_visitors": 0
+      },
+      {
+        "day": "2026-10-28",
+        "views": 0,
+        "unique_visitors": 0
+      },
+      {
+        "day": "2026-10-29",
+        "views": 0,
+        "unique_visitors": 0
+      },
+      {
+        "day": "2026-10-30",
+        "views": 0,
+        "unique_visitors": 0
+      },
+      {
+        "day": "2026-10-31",
+        "views": 10,
+        "unique_visitors": 1
+      },
+      {
+        "day": "2026-11-01",
+        "views": 31,
+        "unique_visitors": 4
+      },
+      {
+        "day": "2026-11-02",
+        "views": 3,
+        "unique_visitors": 2
+      },
+      {
+        "day": "2026-11-03",
+        "views": 0,
+        "unique_visitors": 0
+      },
+      {
+        "day": "2026-11-04",
+        "views": 1,
+        "unique_visitors": 1
+      },
+      {
+        "day": "2026-11-05",
+        "views": 9,
+        "unique_visitors": 3
+      },
+      {
+        "day": "2026-11-06",
+        "views": 1,
+        "unique_visitors": 1
+      }
+    ],
+    "referrers": [
+      {
+        "source": "website",
+        "views": 10,
+        "unique_visitors": 1
+      },
+      {
+        "source": "x",
+        "views": 4,
+        "unique_visitors": 3
+      },
+      {
+        "source": "direct",
+        "views": 41,
+        "unique_visitors": null
+      }
+    ]
+  },
+  "public": {
+    "stars": 0,
+    "forks": 0,
+    "dmg_downloads": 53,
+    "other_file_downloads": 909,
+    "dmg_asset_count": 32,
+    "release_count": 8,
+    "releases": [
+      {
+        "release": "b1087",
+        "published_at": "2026-10-31T21:08:13Z",
+        "zh_fixed": 4,
+        "en_fixed": 5,
+        "zh_versioned": 1,
+        "en_versioned": 0,
+        "unclassified": 0
+      },
+      {
+        "release": "b1088",
+        "published_at": "2026-11-01T04:11:42Z",
+        "zh_fixed": 4,
+        "en_fixed": 2,
+        "zh_versioned": 1,
+        "en_versioned": 1,
+        "unclassified": 0
+      },
+      {
+        "release": "b1090",
+        "published_at": "2026-11-01T07:22:17Z",
+        "zh_fixed": 1,
+        "en_fixed": 1,
+        "zh_versioned": 2,
+        "en_versioned": 1,
+        "unclassified": 0
+      },
+      {
+        "release": "b1091",
+        "published_at": "2026-11-01T10:27:48Z",
+        "zh_fixed": 2,
+        "en_fixed": 2,
+        "zh_versioned": 0,
+        "en_versioned": 1,
+        "unclassified": 0
+      },
+      {
+        "release": "b1097",
+        "published_at": "2026-11-03T15:51:51Z",
+        "zh_fixed": 2,
+        "en_fixed": 1,
+        "zh_versioned": 2,
+        "en_versioned": 1,
+        "unclassified": 0
+      },
+      {
+        "release": "b1099",
+        "published_at": "2026-11-05T04:36:52Z",
+        "zh_fixed": 1,
+        "en_fixed": 1,
+        "zh_versioned": 2,
+        "en_versioned": 1,
+        "unclassified": 0
+      },
+      {
+        "release": "b1100",
+        "published_at": "2026-11-05T05:43:03Z",
+        "zh_fixed": 4,
+        "en_fixed": 3,
+        "zh_versioned": 2,
+        "en_versioned": 0,
+        "unclassified": 0
+      },
+      {
+        "release": "b1101",
+        "published_at": "2026-11-06T11:12:51Z",
+        "zh_fixed": 2,
+        "en_fixed": 1,
+        "zh_versioned": 1,
+        "en_versioned": 1,
+        "unclassified": 0
+      }
+    ]
+  }
+}
