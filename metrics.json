@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
   "repository": "kenyupersonal-maker/chathand",
-  "collected_at": "2026-11-08T09:55:31.971Z",
+  "collected_at": "2026-11-08T10:55:45.835Z",
   "traffic": {
     "views": 55,
     "unique_visitors": 7,
-    "window_start": "2026-10-24T00:00:00Z",
-    "window_end": "2026-11-06T00:00:00Z"
+    "window_start": "2026-10-25T00:00:00Z",
+    "window_end": "2026-11-07T00:00:00Z"
   },
   "public": {
     "stars": 0,
