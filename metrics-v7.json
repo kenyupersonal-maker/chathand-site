@@ -1,18 +1,13 @@
 {
   "schema_version": 1,
   "repository": "kenyupersonal-maker/chathand",
-  "collected_at": "2026-11-11T09:11:01.714Z",
+  "collected_at": "2026-11-11T10:11:15.737Z",
   "traffic": {
-    "views": 56,
-    "unique_visitors": 7,
-    "window_start": "2026-10-27T00:00:00Z",
-    "window_end": "2026-11-09T00:00:00Z",
+    "views": 59,
+    "unique_visitors": 10,
+    "window_start": "2026-10-28T00:00:00Z",
+    "window_end": "2026-11-10T00:00:00Z",
     "daily": [
-      {
-        "day": "2026-10-27",
-        "views": 0,
-        "unique_visitors": 0
-      },
       {
         "day": "2026-10-28",
         "views": 0,
@@ -77,6 +72,11 @@
         "day": "2026-11-09",
         "views": 1,
         "unique_visitors": 1
+      },
+      {
+        "day": "2026-11-10",
+        "views": 3,
+        "unique_visitors": 3
       }
     ],
     "referrers": [
@@ -92,7 +92,7 @@
       },
       {
         "source": "direct",
-        "views": 42,
+        "views": 45,
         "unique_visitors": null
       }
     ]
