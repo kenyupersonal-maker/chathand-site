@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "repository": "kenyupersonal-maker/chathand",
-  "collected_at": "2026-11-27T09:33:51.849Z",
+  "collected_at": "2026-11-27T10:34:05.835Z",
   "traffic": {
     "views": 25,
     "unique_visitors": 3,
@@ -95,10 +95,10 @@
   "public": {
     "stars": 1,
     "forks": 0,
-    "dmg_downloads": 57,
-    "other_file_downloads": 960,
-    "dmg_asset_count": 36,
-    "release_count": 9,
+    "dmg_downloads": 61,
+    "other_file_downloads": 964,
+    "dmg_asset_count": 40,
+    "release_count": 10,
     "releases": [
       {
         "release": "b1087",
@@ -178,6 +178,15 @@
         "zh_fixed": 1,
         "en_fixed": 1,
         "zh_versioned": 1,
+        "en_versioned": 1,
+        "unclassified": 0
+      },
+      {
+        "release": "b1105",
+        "published_at": "2026-11-27T10:09:26Z",
+        "zh_fixed": 2,
+        "en_fixed": 1,
+        "zh_versioned": 0,
         "en_versioned": 1,
         "unclassified": 0
       }
